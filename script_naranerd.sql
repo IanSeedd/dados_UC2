@@ -72,16 +72,17 @@ IGNORE 1 ROWS
 
 SELECT data_venda FROM VENDAS;
 
-SELECT c.nome, SUM(v.valor) AS valor_total
+-- Filtros / perguntas de negocio: 
+SELECT c.id, c.nome, SUM(v.valor) AS valor_total
 FROM vendas v
 JOIN clientes c ON v.id_cliente = c.id
-GROUP BY c.nome
+GROUP BY c.nome, c.id
 ORDER BY valor_total DESC;
 
-SELECT ven.nome, COUNT(v.id) AS total_vendas
+SELECT ven.id, ven.nome, COUNT(v.id) AS total_vendas
 FROM vendas v
 JOIN vendedores ven ON v.id_vendedor = ven.id
-GROUP BY ven.nome
+GROUP BY ven.nome, ven.id
 ORDER BY total_vendas DESC;
 
 SELECT p.categoria, SUM(v.valor) AS valor_total
@@ -90,16 +91,16 @@ JOIN produtos p ON v.id_produto = p.id
 GROUP BY p.categoria
 ORDER BY valor_total DESC;
 
-SELECT ven.nome, c.cidade, COUNT(c.id) AS total_clientes
+SELECT ven.id, ven.nome, c.cidade, COUNT(v.id) AS total_vendas
 FROM vendas v
 JOIN vendedores ven ON v.id_vendedor = ven.id
 JOIN clientes c ON v.id_cliente = c.id
-GROUP BY ven.nome, c.cidade 
-ORDER BY total_clientes DESC;
+GROUP BY ven.nome, c.cidade, ven.id
+ORDER BY total_vendas DESC;
 
-SELECT ven.nome, p.categoria, AVG(v.valor) AS media
+SELECT ven.id, ven.nome, p.categoria, ROUND(AVG(v.valor), 2) AS media
 FROM vendas v
 JOIN vendedores ven ON v.id_vendedor = ven.id
 JOIN produtos p ON v.id_produto = p.id
-GROUP BY ven.nome, p.categoria 
-ORDER BY media DESC;
+GROUP BY ven.nome, p.categoria, ven.id
+ORDER BY p.categoria ASC, media DESC;
